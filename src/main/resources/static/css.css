@@ -1,0 +1,216 @@
+/* ==========================================================================
+   GymNex - Folha de Estilos Avançada (Variáveis, Animações e Dark Mode)
+   ========================================================================== */
+
+/* Variáveis Globais de CSS */
+:root {
+    --sidebar-width: 280px;
+    --primary-color: #0d6efd;
+    --transition-speed: 0.3s;
+    --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --table-hover-bg: rgba(13, 110, 253, 0.05);
+}
+
+/* ================== CONFIGURAÇÕES GERAIS ================== */
+body {
+    font-family: var(--font-family);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.wrapper {
+    min-height: 100vh;
+}
+
+/* Scrollbar Customizada para um visual limpo */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bs-body-bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bs-secondary-bg);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bs-secondary-color);
+}
+
+/* ================== SIDEBAR (MENU LATERAL) ================== */
+.sidebar {
+    width: var(--sidebar-width);
+    transition: all var(--transition-speed) ease-in-out;
+    z-index: 1000;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    transition: background-color var(--transition-speed), color var(--transition-speed), transform 0.2s;
+}
+
+.sidebar .nav-link.active {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0a58ca 100%);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+.opacidade-hover:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.tracking-wide {
+    letter-spacing: 1px;
+}
+
+/* ================== CONTEÚDO PRINCIPAL (MAIN) ================== */
+.content {
+    transition: margin-left var(--transition-speed);
+}
+
+/* Dashboard Cards */
+.stat-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+    border-radius: 12px;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ================== COMPONENTES CUSTOMIZADOS ================== */
+/* Customização da Tabela */
+.custom-table th {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom-width: 1px;
+}
+
+.custom-table tbody tr {
+    transition: background-color var(--transition-speed);
+}
+
+.custom-table tbody tr:hover {
+    background-color: var(--table-hover-bg);
+    cursor: default;
+}
+
+.custom-table td {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    vertical-align: middle;
+}
+
+/* Estilo para Endereço MAC (Código) */
+code.mac-address {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(13, 110, 253, 0.2);
+}
+
+/* Badges de Status do Smartwatch */
+.status-badge {
+    padding: 0.4em 0.8em;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.status-active {
+    background-color: rgba(25, 135, 84, 0.15);
+    color: #198754;
+    border: 1px solid rgba(25, 135, 84, 0.3);
+}
+
+.status-inactive {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: #6c757d;
+    border: 1px solid rgba(108, 117, 125, 0.3);
+}
+
+/* Inputs do Modal */
+.form-floating label {
+    font-size: 0.9rem;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    border-color: var(--primary-color);
+}
+
+/* ================== ANIMAÇÕES (KEYFRAMES) ================== */
+.fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ================== RESPONSIVIDADE ================== */
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: fixed;
+        left: calc(var(--sidebar-width) * -1);
+        height: 100vh;
+    }
+    .sidebar.show {
+        left: 0;
+    }
+    .content {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* ================== SUPORTE A MODO ESCURO (DARK MODE) ================== */
+[data-bs-theme="dark"] {
+    --table-hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+[data-bs-theme="dark"] .bg-body-tertiary {
+    background-color: #121212 !important;
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: #1e1e1e;
+}
+
+[data-bs-theme="dark"] .table-light {
+    background-color: #2b2b2b;
+    color: #e0e0e0;
+    border-color: #333;
+}
+
+[data-bs-theme="dark"] .status-inactive {
+    color: #adb5bd;
+}
+
+[data-bs-theme="dark"] code.mac-address {
+    background-color: rgba(13, 110, 253, 0.2);
+    color: #6ea8fe;
+}
