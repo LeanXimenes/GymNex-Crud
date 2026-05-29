@@ -1,7 +1,3 @@
-/**
- * GymNex - Lógica de Gerenciamento de Planos
- */
-
 'use strict';
 
 const API_PLANOS = '/planos';
@@ -33,15 +29,12 @@ const PlanosController = {
         this.btnThemeToggle.addEventListener('click', this.toggleTheme.bind(this));
     },
 
-    // Formata o número (ex: 99.90) para o padrão de moeda brasileiro (R$ 99,90)
     formatarMoeda: function(valor) {
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
     },
 
-    // READ
+    // UX Assíncrona, não injeta spinners obstrutivos na Tabela
     listarPlanos: async function() {
-        this.tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>`;
-
         try {
             const response = await fetch(API_PLANOS);
             if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
@@ -53,11 +46,9 @@ const PlanosController = {
         } catch (error) {
             console.error('Erro:', error);
             this.tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4 fw-bold">Falha ao comunicar com o servidor.</td></tr>`;
-            UIHelperPlano.showToast('Erro de Conexão', 'Não foi possível carregar os planos.', 'danger');
         }
     },
 
-    // CREATE / UPDATE
     salvarPlano: async function(event) {
         event.preventDefault();
 
@@ -98,7 +89,6 @@ const PlanosController = {
         }
     },
 
-    // DELETE
     deletarPlano: async function(id, nome) {
         if (confirm(`Atenção: Tem certeza que deseja deletar o plano "${nome}"?`)) {
             try {
@@ -143,37 +133,15 @@ const PlanosController = {
 
     atualizarEstatisticas: function(planos) {
         this.statTotal.innerText = planos.length;
-
         let soma = 0;
         planos.forEach(p => soma += p.preco);
         const media = planos.length > 0 ? soma / planos.length : 0;
-
         this.statMedia.innerText = this.formatarMoeda(media);
     },
 
-    initTheme: function() {
-        const savedTheme = localStorage.getItem('gymnex_theme') || 'light';
-        this.applyTheme(savedTheme);
-    },
-
-    toggleTheme: function() {
-        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        this.applyTheme(newTheme);
-    },
-
-    applyTheme: function(theme) {
-        document.documentElement.setAttribute('data-bs-theme', theme);
-        localStorage.setItem('gymnex_theme', theme);
-        const icon = this.btnThemeToggle.querySelector('i');
-        if (theme === 'dark') {
-            icon.classList.replace('fa-moon', 'fa-sun');
-            this.btnThemeToggle.classList.replace('btn-outline-secondary', 'btn-outline-light');
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
-            this.btnThemeToggle.classList.replace('btn-outline-light', 'btn-outline-secondary');
-        }
-    }
+    initTheme: function() { const savedTheme = localStorage.getItem('gymnex_theme') || 'light'; this.applyTheme(savedTheme); },
+    toggleTheme: function() { const currentTheme = document.documentElement.getAttribute('data-bs-theme'); const newTheme = currentTheme === 'light' ? 'dark' : 'light'; this.applyTheme(newTheme); },
+    applyTheme: function(theme) { document.documentElement.setAttribute('data-bs-theme', theme); localStorage.setItem('gymnex_theme', theme); const icon = this.btnThemeToggle.querySelector('i'); if (theme === 'dark') { icon.classList.replace('fa-moon', 'fa-sun'); this.btnThemeToggle.classList.replace('btn-outline-secondary', 'btn-outline-light'); } else { icon.classList.replace('fa-sun', 'fa-moon'); this.btnThemeToggle.classList.replace('btn-outline-light', 'btn-outline-secondary'); } }
 };
 
 window.prepararEdicaoPlano = function(id, nome, preco, duracao) {

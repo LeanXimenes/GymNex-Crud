@@ -18,14 +18,14 @@ const CadastroController = {
 
         this.bindEvents();
         this.initTheme();
-        this.carregarPlanos(); // Carrega os planos ao iniciar a página
+        this.carregarPlanos();
     },
 
     bindEvents: function() {
         this.form.addEventListener('submit', this.realizarMatricula.bind(this));
         this.btnThemeToggle.addEventListener('click', this.toggleTheme.bind(this));
 
-        // Mostra ou esconde o campo MAC com base no Checkbox
+        // CONTROLE DO SMARTWATCH
         this.checkboxSmartwatch.addEventListener('change', (e) => {
             if(e.target.checked) {
                 this.containerMac.classList.remove('d-none');
@@ -33,20 +33,35 @@ const CadastroController = {
             } else {
                 this.containerMac.classList.add('d-none');
                 document.getElementById('dispositivoMac').required = false;
-                document.getElementById('dispositivoMac').value = ''; // Limpa se desmarcar
+                document.getElementById('dispositivoMac').value = '';
             }
         });
 
-        // Máscara do MAC Address
+        // FORMATAÇÃO DO MAC ADDRESS
         const macInput = document.getElementById('dispositivoMac');
         macInput.addEventListener('input', function(e) {
             let val = e.target.value.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
             if (val.length > 0) val = val.match(/.{1,2}/g).join(':');
             e.target.value = val.substring(0, 17);
         });
+
+        // NOVA VALIDAÇÃO OBRIGATÓRIA: Campo Telefone (Apenas Números)
+        const telefoneInput = document.getElementById('telefone');
+        if(telefoneInput) {
+            telefoneInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        }
+
+        // NOVA VALIDAÇÃO OBRIGATÓRIA: Campo Cidade (Apenas Letras e Espaços)
+        const cidadeInput = document.getElementById('cidade');
+        if(cidadeInput) {
+            cidadeInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+            });
+        }
     },
 
-    // Busca os planos salvos no Banco para exibir como Opção de escolha
     carregarPlanos: async function() {
         try {
             const response = await fetch(API_PLANOS);
@@ -82,7 +97,6 @@ const CadastroController = {
         btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> A processar...';
         btnSubmit.disabled = true;
 
-        // Monta o Objeto enviando o Plano escolhido e os novos campos
         const novoAluno = {
             nome: document.getElementById('nome').value.trim(),
             email: document.getElementById('email').value.trim(),
@@ -92,7 +106,7 @@ const CadastroController = {
             condicaoMedica: document.getElementById('condicaoMedica').value.trim(),
             possuiSmartwatch: this.checkboxSmartwatch.checked,
             dispositivoMac: this.checkboxSmartwatch.checked ? document.getElementById('dispositivoMac').value.trim() : null,
-            plano: { id: document.getElementById('planoSelecionado').value } // Vínculo com o Plano
+            plano: { id: document.getElementById('planoSelecionado').value }
         };
 
         try {
@@ -104,8 +118,7 @@ const CadastroController = {
 
             if (!response.ok) throw new Error('Falha no registo');
 
-            UIHelperCadastro.showToast('Registo Concluído!', `O aluno ${novoAluno.nome} foi matriculado. A redirecionar para a gestão...`, 'success');
-
+            UIHelperCadastro.showToast('Registo Concluído!', `O aluno ${novoAluno.nome} foi matriculado. A redirecionar...`, 'success');
             setTimeout(() => { window.location.href = 'index.html'; }, 2000);
 
         } catch (error) {
@@ -117,8 +130,7 @@ const CadastroController = {
     },
 
     validarMac: function() {
-        if (!this.checkboxSmartwatch.checked) return true; // Se não tem smartwatch, validação passa
-
+        if (!this.checkboxSmartwatch.checked) return true;
         const macVal = document.getElementById('dispositivoMac').value.trim();
         const feedback = document.getElementById('mac-feedback');
         const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
@@ -132,7 +144,6 @@ const CadastroController = {
         }
     },
 
-    // Funções de Tema (Omitidas na visualização por brevidade, mas devem permanecer iguais)
     initTheme: function() { const savedTheme = localStorage.getItem('gymnex_theme') || 'light'; this.applyTheme(savedTheme); },
     toggleTheme: function() { const currentTheme = document.documentElement.getAttribute('data-bs-theme'); const newTheme = currentTheme === 'light' ? 'dark' : 'light'; this.applyTheme(newTheme); },
     applyTheme: function(theme) { document.documentElement.setAttribute('data-bs-theme', theme); localStorage.setItem('gymnex_theme', theme); const icon = this.btnThemeToggle.querySelector('i'); if (theme === 'dark') { icon.classList.replace('fa-moon', 'fa-sun'); this.btnThemeToggle.classList.replace('btn-outline-secondary', 'btn-outline-light'); } else { icon.classList.replace('fa-sun', 'fa-moon'); this.btnThemeToggle.classList.replace('btn-outline-light', 'btn-outline-secondary'); } }

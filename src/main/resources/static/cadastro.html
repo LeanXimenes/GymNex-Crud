@@ -27,94 +27,94 @@
     </nav>
 
     <main class="content p-4 w-100 bg-body-tertiary fade-in">
-        <header class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom border-secondary-subtle">
-            <div>
-                <h2 class="fw-bold mb-0 text-body-emphasis">Nova Inscrição</h2>
-                <p class="text-muted small mb-0 mt-1">Preencha a ficha completa e vincule o plano financeiro do aluno.</p>
-            </div>
-            <button class="btn btn-outline-secondary rounded-circle shadow-sm" id="btn-theme-toggle" title="Alternar Tema"><i class="fa-solid fa-moon"></i></button>
-        </header>
+        <div class="content-inner">
 
-        <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
-                    <div class="card-header bg-primary text-white p-4 border-0 text-center">
-                        <i class="fa-solid fa-address-card fa-3x mb-3 opacity-75"></i>
-                        <h4 class="fw-bold mb-0">Ficha de Registo Completa</h4>
-                    </div>
+            <!-- Cabeçalho Limpo: Sem título, apenas o botão de tema alinhado à direita -->
+            <header class="d-flex justify-content-end align-items-center mb-5 pb-3 border-bottom border-secondary-subtle">
+                <button class="btn btn-outline-secondary rounded-circle shadow-sm" id="btn-theme-toggle" title="Alternar Tema">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </header>
 
-                    <div class="card-body p-5 bg-body">
-                        <form id="form-cadastro-aluno" novalidate>
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-11">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+                        <div class="card-header bg-primary text-white p-4 border-0 text-center">
+                            <i class="fa-solid fa-address-card fa-3x mb-3 opacity-75"></i>
+                            <h4 class="fw-bold mb-0">Ficha de Registo Completa</h4>
+                        </div>
 
-                            <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-circle-user me-2"></i>1. Dados Pessoais</h6>
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="nome" required placeholder="Nome Completo" minlength="3">
-                                        <label for="nome" class="text-muted">Nome Completo *</label>
+                        <div class="card-body p-5 bg-body">
+                            <form id="form-cadastro-aluno" novalidate>
+
+                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-circle-user me-2"></i>1. Dados Pessoais</h6>
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="nome" required placeholder="Nome Completo" minlength="3">
+                                            <label for="nome" class="text-muted">Nome Completo *</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="email" class="form-control" id="email" required placeholder="E-mail">
+                                            <label for="email" class="text-muted">E-mail *</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="tel" class="form-control" id="telefone" required placeholder="Telemóvel" pattern="[0-9]*">
+                                            <label for="telefone" class="text-muted">Telemóvel (Apenas Números) *</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="date" class="form-control" id="dataNascimento" required>
+                                            <label for="dataNascimento" class="text-muted">Data de Nascimento *</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="cidade" required placeholder="Cidade">
+                                            <label for="cidade" class="text-muted">Cidade (Sem Números) *</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" required placeholder="E-mail">
-                                        <label for="email" class="text-muted">E-mail *</label>
+
+                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-notes-medical me-2"></i>2. Informações de Saúde</h6>
+                                <div class="form-floating mb-5">
+                                    <textarea class="form-control" placeholder="Descreva aqui..." id="condicaoMedica" style="height: 100px"></textarea>
+                                    <label for="condicaoMedica" class="text-muted">Condições Médicas / Restrições (Opcional)</label>
+                                </div>
+
+                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-tags me-2"></i>3. Plano de Assinatura</h6>
+                                <div class="form-floating mb-5">
+                                    <select class="form-select fw-bold text-primary" id="planoSelecionado" required>
+                                        <option value="" disabled selected>A carregar planos...</option>
+                                    </select>
+                                    <label for="planoSelecionado">Selecione o Plano Desejado *</label>
+                                </div>
+
+                                <div class="p-4 rounded-3 border border-primary border-opacity-25 bg-primary bg-opacity-10 mb-4">
+                                    <h6 class="fw-bold text-primary mb-3"><i class="fa-brands fa-bluetooth text-primary fs-5 me-2"></i>4. Monitorização de Sinais Vitais</h6>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="possuiSmartwatch">
+                                        <label class="form-check-label fw-bold" for="possuiSmartwatch">Aluno possui Smartwatch da GymNex?</label>
+                                    </div>
+                                    <div class="form-floating d-none fade-in" id="container-mac">
+                                        <input type="text" class="form-control font-monospace text-uppercase" id="dispositivoMac" placeholder="00:1A:2B:3C:4D:5E" maxlength="17">
+                                        <label for="dispositivoMac" class="text-muted">Endereço MAC do Relógio</label>
+                                        <div class="invalid-feedback text-danger small mt-1" id="mac-feedback" style="display: none;"><i class="fa-solid fa-circle-exclamation"></i> Formato MAC inválido.</div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="tel" class="form-control" id="telefone" required placeholder="Telemóvel">
-                                        <label for="telefone" class="text-muted">Telemóvel *</label>
-                                    </div>
+
+                                <div class="d-grid mt-5">
+                                    <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm rounded-pill py-3" id="btn-submit">
+                                        <i class="fa-solid fa-check-circle me-2"></i> Concluir Inscrição
+                                    </button>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" id="dataNascimento" required>
-                                        <label for="dataNascimento" class="text-muted">Data de Nascimento *</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="cidade" required placeholder="Cidade">
-                                        <label for="cidade" class="text-muted">Cidade *</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-notes-medical me-2"></i>2. Informações de Saúde</h6>
-                            <div class="form-floating mb-4">
-                                <textarea class="form-control" placeholder="Descreva aqui..." id="condicaoMedica" style="height: 100px"></textarea>
-                                <label for="condicaoMedica" class="text-muted">Condições Médicas / Restrições (Opcional)</label>
-                            </div>
-
-                            <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-tags me-2"></i>3. Plano de Assinatura</h6>
-                            <div class="form-floating mb-4">
-                                <select class="form-select fw-bold text-primary" id="planoSelecionado" required>
-                                    <option value="" disabled selected>A carregar planos...</option>
-                                </select>
-                                <label for="planoSelecionado">Selecione o Plano Desejado *</label>
-                            </div>
-
-                            <div class="p-4 rounded-3 border border-primary border-opacity-25 bg-primary bg-opacity-10 mb-4">
-                                <h6 class="fw-bold text-primary mb-3"><i class="fa-brands fa-bluetooth text-primary fs-5 me-2"></i>4. Monitorização de Sinais Vitais</h6>
-
-                                <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="possuiSmartwatch">
-                                    <label class="form-check-label fw-bold" for="possuiSmartwatch">Aluno possui Smartwatch da GymNex?</label>
-                                </div>
-
-                                <div class="form-floating d-none fade-in" id="container-mac">
-                                    <input type="text" class="form-control font-monospace text-uppercase" id="dispositivoMac" placeholder="00:1A:2B:3C:4D:5E" maxlength="17">
-                                    <label for="dispositivoMac" class="text-muted">Endereço MAC do Relógio</label>
-                                    <div class="invalid-feedback text-danger small mt-1" id="mac-feedback" style="display: none;"><i class="fa-solid fa-circle-exclamation"></i> Formato MAC inválido.</div>
-                                </div>
-                            </div>
-
-                            <div class="d-grid mt-5">
-                                <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm rounded-pill py-3" id="btn-submit">
-                                    <i class="fa-solid fa-check-circle me-2"></i> Concluir Inscrição
-                                </button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

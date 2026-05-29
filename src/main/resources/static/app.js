@@ -15,7 +15,7 @@ const AppController = {
         this.bindEvents();
         this.initTheme();
         this.listarAlunos();
-        this.carregarPlanosParaEdicao(); // Carrega para o modal de edição
+        this.carregarPlanosParaEdicao();
     },
 
     cacheDOM: function() {
@@ -33,7 +33,6 @@ const AppController = {
         this.form.addEventListener('submit', this.salvarAluno.bind(this));
         this.inputBusca.addEventListener('input', this.filtrarTabela.bind(this));
 
-        // Controle do checkbox no Modal de edição
         document.getElementById('edit-possuiSmartwatch').addEventListener('change', (e) => {
             const containerMac = document.getElementById('edit-container-mac');
             const macInput = document.getElementById('dispositivoMac');
@@ -54,6 +53,16 @@ const AppController = {
             e.target.value = val.substring(0, 17);
         });
 
+        // REGEX DE VALIDAÇÃO: Telefone e Cidade do Modal de Edição
+        const telefoneInput = document.getElementById('telefone');
+        if(telefoneInput) {
+            telefoneInput.addEventListener('input', (e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); });
+        }
+        const cidadeInput = document.getElementById('cidade');
+        if(cidadeInput) {
+            cidadeInput.addEventListener('input', (e) => { e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, ''); });
+        }
+
         this.btnThemeToggle.addEventListener('click', this.toggleTheme.bind(this));
     },
 
@@ -63,14 +72,12 @@ const AppController = {
             const planos = await response.json();
             const select = document.getElementById('edit-planoSelecionado');
             select.innerHTML = '<option value="" disabled>Escolha um plano...</option>';
-            planos.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.nomePlano}</option>`;
-            });
+            planos.forEach(p => { select.innerHTML += `<option value="${p.id}">${p.nomePlano}</option>`; });
         } catch (error) { console.error('Erro ao carregar planos:', error); }
     },
 
+    // UX Limpa: Sem spinners bloqueantes. Ocorre em background.
     listarAlunos: async function() {
-        this.tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>`;
         try {
             const response = await fetch(API_URL);
             if (!response.ok) throw new Error();
@@ -79,7 +86,8 @@ const AppController = {
             this.renderizarTabela(alunos);
             this.atualizarEstatisticas(alunos);
         } catch (error) {
-            this.tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4 fw-bold">Falha de conexão.</td></tr>`;
+            // Em caso de erro, avisa discretamente
+            this.tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4 fw-bold">Não foi possível carregar os dados.</td></tr>`;
         }
     },
 
@@ -116,7 +124,6 @@ const AppController = {
         } catch (error) { UIHelper.showToast('Erro', 'Falha ao guardar dados.', 'danger'); }
     },
 
-    // FUNÇÃO QUE ALTERA O STATUS PARA INATIVO (Substitui o Deletar)
     alternarStatus: async function(id, nome, statusAtual) {
         const acao = statusAtual ? 'Inativar' : 'Reativar';
         if (confirm(`Deseja ${acao} a ficha do aluno "${nome}"?`)) {
@@ -139,29 +146,20 @@ const AppController = {
         }
 
         alunosArray.forEach(aluno => {
-            // Status de Atividade
             const badgeAtivo = aluno.ativo
                 ? `<span class="badge bg-success bg-opacity-10 text-success border border-success">ATIVO</span>`
                 : `<span class="badge bg-danger bg-opacity-10 text-danger border border-danger">INATIVO</span>`;
 
-            // Status do Relógio
             const badgeHTML = aluno.possuiSmartwatch && aluno.dispositivoMac
                 ? `<span class="status-badge status-active"><i class="fa-solid fa-check-circle"></i> Sincronizado</span><br><code class="mac-address mt-1 d-inline-block">${aluno.dispositivoMac}</code>`
                 : `<span class="status-badge status-inactive"><i class="fa-solid fa-xmark"></i> Sem Smartwatch</span>`;
 
-            // Nome do Plano
             const nomePlano = aluno.plano ? aluno.plano.nomePlano : '<span class="text-danger">Sem Plano</span>';
-
-            // Define se o botão deve ser Inativar ou Ativar
             const btnAcaoClass = aluno.ativo ? 'btn-outline-danger' : 'btn-outline-success';
             const btnAcaoIcon = aluno.ativo ? 'fa-ban' : 'fa-check';
             const btnAcaoTitle = aluno.ativo ? 'Inativar Aluno' : 'Reativar Aluno';
-
-            // Dados codificados para o botão de edição
             const dadosStr = encodeURIComponent(JSON.stringify(aluno));
-
-            // Tracinhar o aluno inativo visualmente
-            const trClass = aluno.ativo ? '' : 'opacity-50 bg-light';
+            const trClass = aluno.ativo ? '' : 'opacity-50 bg-body-secondary';
 
             this.tbody.innerHTML += `
                 <tr class="${trClass}">
@@ -171,10 +169,7 @@ const AppController = {
                             <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 35px; height: 35px;">
                                 ${aluno.nome.charAt(0).toUpperCase()}
                             </div>
-                            <div>
-                                ${aluno.nome} <br>
-                                ${badgeAtivo}
-                            </div>
+                            <div>${aluno.nome} <br>${badgeAtivo}</div>
                         </div>
                     </td>
                     <td>
@@ -193,7 +188,6 @@ const AppController = {
     },
 
     atualizarEstatisticas: function(alunos) {
-        // Estatística só conta alunos ativos
         const ativos = alunos.filter(a => a.ativo);
         this.statTotal.innerText = ativos.length;
         this.statSmart.innerText = ativos.filter(a => a.possuiSmartwatch).length;
@@ -212,7 +206,7 @@ const AppController = {
         document.getElementById('mac-feedback').style.display = 'block';
         return false;
     },
-    // Temas mantidos
+
     initTheme: function() { const t = localStorage.getItem('gymnex_theme') || 'light'; this.applyTheme(t); },
     toggleTheme: function() { const t = document.documentElement.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light'; this.applyTheme(t); },
     applyTheme: function(t) { document.documentElement.setAttribute('data-bs-theme', t); localStorage.setItem('gymnex_theme', t); const i = this.btnThemeToggle.querySelector('i'); if (t === 'dark') { i.classList.replace('fa-moon', 'fa-sun'); this.btnThemeToggle.classList.replace('btn-outline-secondary', 'btn-outline-light'); } else { i.classList.replace('fa-sun', 'fa-moon'); this.btnThemeToggle.classList.replace('btn-outline-light', 'btn-outline-secondary'); } }
