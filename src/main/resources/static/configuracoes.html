@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymNex | Configurações</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+
+<div class="d-flex wrapper">
+
+    <nav class="sidebar bg-dark text-white p-3 flex-shrink-0 shadow-lg">
+        <div class="d-flex align-items-center mb-4 mt-2 px-2">
+            <i class="fa-solid fa-dumbbell fs-3 text-primary me-2 pulse-icon"></i>
+            <span class="fs-4 fw-bold tracking-wide">Gym<span class="text-primary">Nex</span></span>
+        </div>
+        <hr class="border-secondary">
+        <ul class="nav nav-pills flex-column mb-auto mt-3">
+            <li class="nav-item mb-2"><a href="index.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-users me-2"></i> Gerenciar Alunos</a></li>
+            <li class="nav-item mb-2"><a href="sinais-vitais.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-heart-pulse me-2"></i> Sinais Vitais</a></li>
+            <li class="nav-item mb-2"><a href="planos.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-clipboard-list me-2"></i> Planos e Treinos</a></li>
+        </ul>
+        <hr class="border-secondary">
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle px-2" data-bs-toggle="dropdown" aria-expanded="false">
+                <img id="sidebar-instrutor-foto" src="https://ui-avatars.com/api/?name=Instrutor&background=0d6efd&color=fff" alt="Perfil" width="32" height="32" class="rounded-circle me-2 border border-primary">
+                <strong id="sidebar-instrutor-nome">Instrutor</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                <li><a class="dropdown-item active" href="configuracoes.html">Configurações</a></li>
+                <li><a class="dropdown-item" href="perfil.html">Perfil</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#">Sair do Sistema</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="content p-4 w-100 bg-body-tertiary fade-in">
+        <div class="content-inner">
+
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 mt-4">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+                        <div class="card-header bg-dark text-white p-4 border-0 text-center">
+                            <h4 class="fw-bold mb-0"><i class="fa-solid fa-gear me-2"></i> Configurações do Sistema</h4>
+                        </div>
+                        <div class="card-body p-5 bg-body">
+                            <form id="form-config" novalidate>
+
+                                <h6 class="fw-bold text-primary mb-3">Notificações</h6>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input fs-5" type="checkbox" role="switch" id="notificacoesEmail">
+                                    <label class="form-check-label fs-6 pt-1 ms-2" for="notificacoesEmail">Receber Alertas por E-mail</label>
+                                </div>
+                                <div class="form-check form-switch mb-4">
+                                    <input class="form-check-input fs-5" type="checkbox" role="switch" id="notificacoesSms">
+                                    <label class="form-check-label fs-6 pt-1 ms-2" for="notificacoesSms">Receber Alertas por SMS</label>
+                                </div>
+
+                                <hr class="mb-4 text-muted">
+
+                                <h6 class="fw-bold text-primary mb-3">Aparência</h6>
+                                <div class="form-check form-switch mb-5">
+                                    <input class="form-check-input fs-5" type="checkbox" role="switch" id="temaEscuro">
+                                    <label class="form-check-label fs-6 pt-1 ms-2" for="temaEscuro">Modo Escuro Padrão</label>
+                                    <div class="form-text text-muted">Habilitar inicia o painel no modo escuro.</div>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                                        <i class="fa-solid fa-check me-2"></i> Salvar Configurações
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<button class="btn btn-dark rounded-circle shadow-lg theme-toggle-fixed border border-secondary" id="btn-theme-toggle" title="Alternar Tema">
+    <i class="fa-solid fa-moon"></i>
+</button>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 1080;"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="configuracoes.js"></script>
+</body>
+</html>

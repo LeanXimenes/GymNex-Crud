@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-PT" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymNex | Painel Administrativo</title>
+
+    <script>
+        // Vai à memória do navegador (localStorage) e procura a chave 'gymnex_token'
+        if (!localStorage.getItem('gymnex_token')) {
+            // Se NÃO tiver a chave (ou seja, não fez login), substitui a página atual
+            // pela tela de login. Usamos 'replace' para ele não conseguir usar a seta
+            // de "Voltar" do navegador para tentar burlar o sistema.
+            window.location.replace('login.html');
+        }
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+
+<div class="d-flex wrapper">
+
+    <nav class="sidebar bg-dark text-white p-3 flex-shrink-0 shadow-lg">
+
+        <div class="d-flex align-items-center mb-4 mt-2 px-2">
+            <i class="fa-solid fa-dumbbell fs-3 text-primary me-2 pulse-icon"></i>
+            <span class="fs-4 fw-bold tracking-wide">Gym<span class="text-primary">Nex</span></span>
+        </div>
+        <hr class="border-secondary">
+
+        <ul class="nav nav-pills flex-column mb-auto mt-3">
+            <li class="nav-item mb-2"><a href="cadastro.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-user-plus me-2"></i> Matricular Aluno</a></li>
+            <li class="nav-item mb-2"><a href="index.html" class="nav-link active rounded-3 py-3" aria-current="page"><i class="fa-solid fa-users-gear me-2"></i> Gerir Alunos</a></li>
+            <li class="nav-item mb-2"><a href="sinais-vitais.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-heart-pulse me-2"></i> Sinais Vitais</a></li>
+            <li class="nav-item mb-2"><a href="planos.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-clipboard-list me-2"></i> Planos e Treinos</a></li>
+        </ul>
+        <hr class="border-secondary">
+
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle px-2" data-bs-toggle="dropdown" aria-expanded="false">
+                <img id="sidebar-instrutor-foto" src="https://ui-avatars.com/api/?name=Instrutor&background=0d6efd&color=fff" alt="Perfil" width="32" height="32" class="rounded-circle me-2 border border-primary">
+                <strong id="sidebar-instrutor-nome">Instrutor</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                <li><a class="dropdown-item" href="configuracoes.html">Configurações</a></li>
+                <li><a class="dropdown-item" href="perfil.html">Perfil</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#" onclick="fazerLogout()">Sair do Sistema</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="content p-4 w-100 bg-body-tertiary fade-in">
+        <div class="content-inner">
+
+            <header class="d-flex justify-content-end align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
+                <div class="d-flex align-items-center gap-3">
+                    <a href="cadastro.html" class="btn btn-primary fw-bold shadow-sm">
+                        <i class="fa-solid fa-plus me-1"></i> Novo Aluno
+                    </a>
+                </div>
+            </header>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card stat-card border-0 shadow-sm bg-primary text-white h-100 overflow-hidden">
+                        <div class="card-body d-flex justify-content-between align-items-center position-relative">
+                            <div>
+                                <h6 class="text-uppercase fw-semibold mb-1 opacity-75">Total de Alunos</h6>
+                                <h2 class="display-5 fw-bold mb-0" id="stat-total-alunos">0</h2>
+                            </div>
+                            <i class="fa-solid fa-users fa-3x opacity-25 position-absolute end-0 me-3 translate-middle-y" style="top: 50%;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card border-0 shadow-sm bg-success text-white h-100 overflow-hidden">
+                        <div class="card-body d-flex justify-content-between align-items-center position-relative">
+                            <div>
+                                <h6 class="text-uppercase fw-semibold mb-1 opacity-75">Smartwatches Vinculados</h6>
+                                <h2 class="display-5 fw-bold mb-0" id="stat-smartwatches">0</h2>
+                            </div>
+                            <i class="fa-solid fa-watch-apple fa-3x opacity-25 position-absolute end-0 me-3 translate-middle-y" style="top: 50%;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card border-0 shadow-sm bg-warning text-dark h-100 overflow-hidden">
+                        <div class="card-body d-flex justify-content-between align-items-center position-relative">
+                            <div>
+                                <h6 class="text-uppercase fw-semibold mb-1 opacity-75">Alertas Recentes</h6>
+                                <h2 class="display-5 fw-bold mb-0">0</h2>
+                            </div>
+                            <i class="fa-solid fa-triangle-exclamation fa-3x opacity-25 position-absolute end-0 me-3 translate-middle-y" style="top: 50%;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-body py-3 border-bottom-0 d-flex justify-content-between align-items-center">
+                    <div class="input-group w-auto w-md-50 ms-auto">
+                        <span class="input-group-text bg-body border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0" id="pesquisa-aluno" placeholder="Procurar por nome ou e-mail...">
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 custom-table">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="ps-4">ID</th>
+                                <th scope="col">Nome do Aluno</th>
+                                <th scope="col">Contactos</th>
+                                <th scope="col">Plano</th>
+                                <th scope="col">Status Smartwatch</th>
+                                <th scope="col" class="text-end pe-4">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tabela-alunos">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-body py-3 border-top-0 d-flex justify-content-between align-items-center">
+                    <span class="text-muted small" id="tabela-info">Exibindo 0 registos</span>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="AppController.listarAlunos()"><i class="fa-solid fa-rotate-right me-1"></i> Atualizar Dados</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<div class="modal fade" id="modalCadastroAluno" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white border-bottom-0">
+                <h1 class="modal-title fs-5 fw-bold"><i class="fa-solid fa-user-pen me-2"></i> Editar Aluno</h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4 bg-body">
+                <form id="aluno-form" novalidate>
+                    <input type="hidden" id="aluno-id">
+
+                    <div class="row g-3">
+                        <div class="col-md-6 form-floating mb-3">
+                            <input type="text" class="form-control fw-bold" id="nome" required minlength="3">
+                            <label for="nome" class="text-muted"><i class="fa-solid fa-user me-1"></i> Nome Completo</label>
+                        </div>
+                        <div class="col-md-6 form-floating mb-3">
+                            <input type="email" class="form-control" id="email" required>
+                            <label for="email" class="text-muted"><i class="fa-solid fa-envelope me-1"></i> E-mail de Contacto</label>
+                        </div>
+                        <div class="col-md-6 form-floating mb-3">
+                            <input type="tel" class="form-control" id="telefone" required pattern="[0-9]*">
+                            <label for="telefone" class="text-muted"><i class="fa-solid fa-phone me-1"></i> Telemóvel</label>
+                        </div>
+                        <div class="col-md-6 form-floating mb-3">
+                            <input type="date" class="form-control" id="dataNascimento" required>
+                            <label for="dataNascimento" class="text-muted"><i class="fa-solid fa-calendar me-1"></i> Data Nasc.</label>
+                        </div>
+                        <div class="col-md-6 form-floating mb-3">
+                            <input type="text" class="form-control" id="cidade" required>
+                            <label for="cidade" class="text-muted"><i class="fa-solid fa-map-pin me-1"></i> Cidade</label>
+                        </div>
+                        <div class="col-md-6 form-floating mb-3">
+                            <select class="form-select fw-bold text-primary" id="edit-planoSelecionado" required></select>
+                            <label for="edit-planoSelecionado"><i class="fa-solid fa-tags me-1"></i> Plano</label>
+                        </div>
+                        <div class="col-12 form-floating mb-3">
+                            <textarea class="form-control" id="condicaoMedica" style="height: 60px"></textarea>
+                            <label for="condicaoMedica" class="text-muted"><i class="fa-solid fa-notes-medical me-1"></i> Condição Médica</label>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-body-tertiary rounded-3 mt-2 border">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="edit-possuiSmartwatch">
+                            <label class="form-check-label fw-bold" for="edit-possuiSmartwatch">Possui Smartwatch?</label>
+                        </div>
+                        <div class="form-floating d-none" id="edit-container-mac">
+                            <input type="text" class="form-control text-uppercase font-monospace text-primary" id="dispositivoMac" placeholder="00:1A:2B:3C:4D:5E" maxlength="17">
+                            <label for="dispositivoMac" class="text-muted"><i class="fa-brands fa-bluetooth me-1"></i> Endereço MAC</label>
+                            <div class="invalid-feedback" id="mac-feedback">Formato MAC inválido.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm" id="btn-submit">
+                            <i class="fa-solid fa-rotate me-2"></i> Guardar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-dark rounded-circle shadow-lg theme-toggle-fixed border border-secondary" id="btn-theme-toggle" title="Alternar Tema">
+    <i class="fa-solid fa-moon"></i>
+</button>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 1080;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function fazerLogout() {
+        // Remove a chave de acesso do navegadorr
+        localStorage.removeItem('gymnex_token');
+        // Redireciona imediatamente para o login
+        window.location.replace('login.html');
+    }
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html>

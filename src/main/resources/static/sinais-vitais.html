@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymNex | Sinais Vitais</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+
+<div class="d-flex wrapper">
+
+    <nav class="sidebar bg-dark text-white p-3 flex-shrink-0 shadow-lg">
+        <div class="d-flex align-items-center mb-4 mt-2 px-2">
+            <i class="fa-solid fa-dumbbell fs-3 text-primary me-2 pulse-icon"></i>
+            <span class="fs-4 fw-bold tracking-wide">Gym<span class="text-primary">Nex</span></span>
+        </div>
+        <hr class="border-secondary">
+        <ul class="nav nav-pills flex-column mb-auto mt-3">
+            <li class="nav-item mb-2"><a href="index.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-users me-2"></i> Gerenciar Alunos</a></li>
+            <li class="nav-item mb-2"><a href="sinais-vitais.html" class="nav-link active rounded-3 py-3" aria-current="page"><i class="fa-solid fa-heart-pulse me-2"></i> Sinais Vitais</a></li>
+            <li class="nav-item mb-2"><a href="planos.html" class="nav-link text-white rounded-3 py-3 opacidade-hover"><i class="fa-solid fa-clipboard-list me-2"></i> Planos e Treinos</a></li>
+        </ul>
+        <hr class="border-secondary">
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle px-2" data-bs-toggle="dropdown" aria-expanded="false">
+                <img id="sidebar-instrutor-foto" src="https://ui-avatars.com/api/?name=Instrutor&background=0d6efd&color=fff" alt="Perfil" width="32" height="32" class="rounded-circle me-2 border border-primary">
+                <strong id="sidebar-instrutor-nome">Instrutor</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                <li><a class="dropdown-item" href="configuracoes.html">Configurações</a></li>
+                <li><a class="dropdown-item" href="perfil.html">Perfil</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#">Sair do Sistema</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="content p-4 w-100 bg-body-tertiary fade-in">
+        <div class="content-inner">
+
+            <header class="d-flex justify-content-end align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-primary fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalSinalVital" onclick="limparFormularioSinais()">
+                        <i class="fa-solid fa-plus me-1"></i> Adicionar Registro
+                    </button>
+                </div>
+            </header>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-body py-3 border-bottom-0">
+                    <h5 class="card-title fw-bold mb-0 text-body-emphasis">Registros de Sinais Vitais</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 custom-table">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="ps-4">Data/Hora</th>
+                                <th scope="col">Aluno</th>
+                                <th scope="col">BPM <i class="fa-solid fa-heart text-danger"></i></th>
+                                <th scope="col">Pressão Arterial</th>
+                                <th scope="col">SpO2 (%)</th>
+                                <th scope="col">Observações</th>
+                                <th scope="col" class="text-end pe-4">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tabela-sinais">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<div class="modal fade" id="modalSinalVital" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white border-bottom-0">
+                <h1 class="modal-title fs-5 fw-bold"><i class="fa-solid fa-heart-circle-plus me-2"></i><span id="form-title-sinal">Adicionar Registro</span></h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 bg-body">
+                <form id="sinal-form" novalidate>
+                    <input type="hidden" id="sinal-id">
+
+                    <div class="mb-3 form-floating">
+                        <select class="form-select fw-bold text-primary" id="sinal-aluno" required></select>
+                        <label for="sinal-aluno"><i class="fa-solid fa-user me-1"></i> Selecionar Aluno</label>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="bpm" required placeholder="Ex: 80" min="30" max="220">
+                                <label for="bpm" class="text-muted">BPM</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="pressao" required placeholder="Ex: 120/80">
+                                <label for="pressao" class="text-muted">PA (mmHg)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="spo2" required placeholder="Ex: 98" min="50" max="100">
+                                <label for="spo2" class="text-muted">SpO2 (%)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="observacoes" placeholder="Observações" style="height: 80px"></textarea>
+                        <label for="observacoes" class="text-muted">Observações</label>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm" id="btn-submit-sinal">
+                            <i class="fa-solid fa-floppy-disk me-2"></i> Salvar Registro
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-dark rounded-circle shadow-lg theme-toggle-fixed border border-secondary" id="btn-theme-toggle" title="Alternar Tema">
+    <i class="fa-solid fa-moon"></i>
+</button>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 1080;"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="sinais-vitais.js"></script>
+</body>
+</html>
