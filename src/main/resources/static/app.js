@@ -85,11 +85,17 @@ const AppController = {
     carregarPlanosParaEdicao: async function() {
         try {
             const response = await fetch(API_PLANOS);
-            const planos = await response.json();
-            const select = document.getElementById('edit-planoSelecionado');
-            select.innerHTML = '<option value="" disabled>Escolha um plano...</option>';
-            planos.forEach(p => { select.innerHTML += `<option value="${p.id}">${p.nomePlano}</option>`; });
-        } catch (error) { console.error('Erro ao carregar planos:', error); }
+            if(response.ok) {
+                const planos = await response.json();
+                const select = document.getElementById('edit-planoSelecionado');
+                select.innerHTML = '<option value="" disabled>Escolha um plano...</option>';
+                planos.forEach(p => {
+                    select.innerHTML += `<option value="${p.id}">${p.nomePlano}</option>`;
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao carregar planos:', error);
+        }
     },
 
     listarAlunos: async function() {
@@ -101,7 +107,7 @@ const AppController = {
             this.renderizarTabela(alunos);
             this.atualizarEstatisticas(alunos);
         } catch (error) {
-            this.tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4 fw-bold">Não foi possível carregar os dados.</td></tr>`;
+            this.tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4 fw-bold">Não foi possível carregar os dados do servidor.</td></tr>`;
         }
     },
 
@@ -115,6 +121,8 @@ const AppController = {
 
         const id = document.getElementById('aluno-id').value;
         const possuiMac = document.getElementById('edit-possuiSmartwatch').checked;
+        const planoId = document.getElementById('edit-planoSelecionado').value;
+
         const dadosAluno = {
             nome: document.getElementById('nome').value.trim(),
             email: document.getElementById('email').value.trim(),
@@ -124,7 +132,7 @@ const AppController = {
             condicaoMedica: document.getElementById('condicaoMedica').value.trim(),
             possuiSmartwatch: possuiMac,
             dispositivoMac: possuiMac ? document.getElementById('dispositivoMac').value.trim() : null,
-            plano: { id: document.getElementById('edit-planoSelecionado').value }
+            plano: planoId ? { id: planoId } : null
         };
 
         try {
@@ -134,11 +142,12 @@ const AppController = {
             if (!response.ok) throw new Error('Erro');
             this.modalCadastro.hide();
             this.listarAlunos();
-            UIHelper.showToast('Sucesso', 'Dados atualizados!', 'success');
-        } catch (error) { UIHelper.showToast('Erro', 'Falha ao guardar dados.', 'danger'); }
+            UIHelper.showToast('Sucesso', 'Ficha do aluno atualizada!', 'success');
+        } catch (error) {
+            UIHelper.showToast('Erro', 'Falha ao guardar os dados.', 'danger');
+        }
     },
 
-    // O ID agora é tratado como String para suportar o formato do Firebase
     alternarStatus: async function(id, nome, statusAtual) {
         const acao = statusAtual ? 'Inativar' : 'Reativar';
         if (confirm(`Deseja ${acao} a ficha do aluno "${nome}"?`)) {
@@ -147,7 +156,9 @@ const AppController = {
                 if (!response.ok) throw new Error('Falha');
                 this.listarAlunos();
                 UIHelper.showToast('Status Alterado', `O aluno ${nome} agora está ${statusAtual ? 'Inativo' : 'Ativo'}.`, 'warning');
-            } catch (error) { UIHelper.showToast('Erro', `Não foi possível ${acao}.`, 'danger'); }
+            } catch (error) {
+                UIHelper.showToast('Erro', `Não foi possível ${acao}.`, 'danger');
+            }
         }
     },
 
@@ -176,7 +187,10 @@ const AppController = {
             const dadosStr = encodeURIComponent(JSON.stringify(aluno));
             const trClass = aluno.ativo ? '' : 'opacity-50 bg-body-secondary';
 
-            // ATENÇÃO: As aspas simples em '${aluno.id}' são cruciais para o Firebase
+            // REGRA NOVA: Desativar o botão de edição se o aluno estiver inativo
+            const btnEditDesativado = aluno.ativo ? '' : 'disabled';
+            const tituloEdit = aluno.ativo ? 'Editar Ficha' : 'Reative o aluno para poder editar';
+
             this.tbody.innerHTML += `
                 <tr class="${trClass}">
                     <td class="text-muted fw-bold ps-4" style="max-width: 80px; overflow: hidden; text-overflow: ellipsis;" title="${aluno.id}">#${aluno.id.substring(0,5)}</td>
@@ -195,7 +209,7 @@ const AppController = {
                     <td class="fw-bold"><i class="fa-solid fa-tag text-warning me-1"></i> ${nomePlano}</td>
                     <td>${badgeHTML}</td>
                     <td class="text-end pe-4">
-                        <button class="btn btn-sm btn-outline-primary shadow-sm me-1" title="Editar Ficha" onclick="prepararEdicao('${dadosStr}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-outline-primary shadow-sm me-1" title="${tituloEdit}" onclick="prepararEdicao('${dadosStr}')" ${btnEditDesativado}><i class="fa-solid fa-pen"></i></button>
                         <button class="btn btn-sm ${btnAcaoClass} shadow-sm" title="${btnAcaoTitle}" onclick="AppController.alternarStatus('${aluno.id}', '${aluno.nome}', ${aluno.ativo})"><i class="fa-solid ${btnAcaoIcon}"></i></button>
                     </td>
                 </tr>

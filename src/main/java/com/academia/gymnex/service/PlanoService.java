@@ -11,6 +11,26 @@ import java.util.List;
 public class PlanoService {
     private static final String COLLECTION = "planos";
 
+    // 1. NOVO MÉTODO PARA CRIAR/SALVAR UM PLANO
+    public String salvar(Plano plano) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+        DocumentReference doc;
+
+        // Se o plano não tiver ID, é um plano novo (o Firebase gera um código aleatório)
+        if (plano.getId() == null || plano.getId().isEmpty()) {
+            doc = db.collection(COLLECTION).document();
+            plano.setId(doc.getId());
+        } else {
+            // Se já tiver ID, ele atualiza o plano existente
+            doc = db.collection(COLLECTION).document(plano.getId());
+        }
+
+        // Envia para a nuvem
+        doc.set(plano).get();
+        return plano.getId();
+    }
+
+    // 2. MÉTODO QUE VOCÊ JÁ TINHA (Listar)
     public List<Plano> listarTodos() throws Exception {
         Firestore db = FirestoreClient.getFirestore();
         List<QueryDocumentSnapshot> docs = db.collection(COLLECTION).get().get().getDocuments();
