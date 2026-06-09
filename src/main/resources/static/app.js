@@ -34,6 +34,7 @@ const AppController = {
         this.form.addEventListener('submit', this.salvarAluno.bind(this));
         this.inputBusca.addEventListener('input', this.filtrarTabela.bind(this));
 
+        // Switch de Smartwatch (Mostra/Oculta o campo MAC)
         document.getElementById('edit-possuiSmartwatch').addEventListener('change', (e) => {
             const containerMac = document.getElementById('edit-container-mac');
             const macInput = document.getElementById('dispositivoMac');
@@ -47,6 +48,7 @@ const AppController = {
             }
         });
 
+        // Formatação automática do Endereço MAC
         const macInput = document.getElementById('dispositivoMac');
         macInput.addEventListener('input', function(e) {
             let val = e.target.value.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
@@ -54,6 +56,7 @@ const AppController = {
             e.target.value = val.substring(0, 17);
         });
 
+        // Bloqueia letras no telefone e números na cidade
         const telefoneInput = document.getElementById('telefone');
         if(telefoneInput) {
             telefoneInput.addEventListener('input', (e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); });
@@ -74,7 +77,7 @@ const AppController = {
                 const fotoEl = document.getElementById('sidebar-instrutor-foto');
                 const nomeEl = document.getElementById('sidebar-instrutor-nome');
                 if(fotoEl) fotoEl.src = instrutor.fotoPerfilUrl || 'https://ui-avatars.com/api/?name=Instrutor&background=0d6efd&color=fff';
-                if(nomeEl) nomeEl.innerText = instrutor.nome || 'Instrutor';
+                if(nomeEl) nomeEl.innerText = instrutor.nome || 'Instrutor Admin';
             }
         } catch(e) {}
     },
@@ -135,6 +138,7 @@ const AppController = {
         } catch (error) { UIHelper.showToast('Erro', 'Falha ao guardar dados.', 'danger'); }
     },
 
+    // O ID agora é tratado como String para suportar o formato do Firebase
     alternarStatus: async function(id, nome, statusAtual) {
         const acao = statusAtual ? 'Inativar' : 'Reativar';
         if (confirm(`Deseja ${acao} a ficha do aluno "${nome}"?`)) {
@@ -165,16 +169,17 @@ const AppController = {
                 ? `<span class="status-badge status-active"><i class="fa-solid fa-check-circle"></i> Sincronizado</span><br><code class="mac-address mt-1 d-inline-block">${aluno.dispositivoMac}</code>`
                 : `<span class="status-badge status-inactive"><i class="fa-solid fa-xmark"></i> Sem Smartwatch</span>`;
 
-            const nomePlano = aluno.plano ? aluno.plano.nomePlano : '<span class="text-danger">Sem Plano</span>';
+            const nomePlano = aluno.plano && aluno.plano.nomePlano ? aluno.plano.nomePlano : '<span class="text-danger">Sem Plano</span>';
             const btnAcaoClass = aluno.ativo ? 'btn-outline-danger' : 'btn-outline-success';
             const btnAcaoIcon = aluno.ativo ? 'fa-ban' : 'fa-check';
             const btnAcaoTitle = aluno.ativo ? 'Inativar Aluno' : 'Reativar Aluno';
             const dadosStr = encodeURIComponent(JSON.stringify(aluno));
             const trClass = aluno.ativo ? '' : 'opacity-50 bg-body-secondary';
 
+            // ATENÇÃO: As aspas simples em '${aluno.id}' são cruciais para o Firebase
             this.tbody.innerHTML += `
                 <tr class="${trClass}">
-                    <td class="text-muted fw-bold ps-4">#${aluno.id}</td>
+                    <td class="text-muted fw-bold ps-4" style="max-width: 80px; overflow: hidden; text-overflow: ellipsis;" title="${aluno.id}">#${aluno.id.substring(0,5)}</td>
                     <td class="fw-bold text-body-emphasis">
                         <div class="d-flex align-items-center">
                             <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 35px; height: 35px;">
@@ -191,7 +196,7 @@ const AppController = {
                     <td>${badgeHTML}</td>
                     <td class="text-end pe-4">
                         <button class="btn btn-sm btn-outline-primary shadow-sm me-1" title="Editar Ficha" onclick="prepararEdicao('${dadosStr}')"><i class="fa-solid fa-pen"></i></button>
-                        <button class="btn btn-sm ${btnAcaoClass} shadow-sm" title="${btnAcaoTitle}" onclick="AppController.alternarStatus(${aluno.id}, '${aluno.nome}', ${aluno.ativo})"><i class="fa-solid ${btnAcaoIcon}"></i></button>
+                        <button class="btn btn-sm ${btnAcaoClass} shadow-sm" title="${btnAcaoTitle}" onclick="AppController.alternarStatus('${aluno.id}', '${aluno.nome}', ${aluno.ativo})"><i class="fa-solid ${btnAcaoIcon}"></i></button>
                     </td>
                 </tr>
             `;
@@ -257,7 +262,11 @@ window.prepararEdicao = function(alunoCodificado) {
     document.getElementById('cidade').value = aluno.cidade;
     document.getElementById('condicaoMedica').value = aluno.condicaoMedica || '';
 
-    if(aluno.plano) { document.getElementById('edit-planoSelecionado').value = aluno.plano.id; }
+    if(aluno.plano && aluno.plano.id) {
+        document.getElementById('edit-planoSelecionado').value = aluno.plano.id;
+    } else {
+        document.getElementById('edit-planoSelecionado').value = '';
+    }
 
     const checkSmart = document.getElementById('edit-possuiSmartwatch');
     const containerMac = document.getElementById('edit-container-mac');
