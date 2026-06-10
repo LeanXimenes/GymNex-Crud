@@ -54,7 +54,7 @@ const CadastroController = {
                 const select = document.getElementById('planoSelecionado');
                 select.innerHTML = '<option value="" disabled selected>Selecione o Plano Desejado *</option>';
                 planos.forEach(p => {
-                    select.innerHTML += `<option value="${p.id}">${p.nomePlano} - €${p.preco}</option>`;
+                    select.innerHTML += `<option value="${p.id}">${p.nomePlano} - R$${p.preco}</option>`;
                 });
             }
         } catch (error) {
