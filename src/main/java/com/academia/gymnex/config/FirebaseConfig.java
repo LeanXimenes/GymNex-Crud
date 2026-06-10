@@ -26,7 +26,7 @@ public class FirebaseConfig {
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
-            // Se o Firebase ainda não estiver ligado, ele liga agora
+            // Se o FFirebase ainda não estiver ligado, ele liga agora
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
                 System.out.println("🚀 CONEXÃO COM O FIREBASE BEM SUCEDIDA! 🚀");
